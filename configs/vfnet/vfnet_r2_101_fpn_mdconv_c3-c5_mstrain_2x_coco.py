@@ -14,3 +14,79 @@ model = dict(
         style='pytorch',
         dcn=dict(type='DCNv2', deform_groups=1, fallback_on_stride=False),
         stage_with_dcn=(False, True, True, True)))
+
+# DATA
+CATE_ID = '1'
+
+classes_dict = {'1': 'visible body', '2': 'full body', '3': 'head', '4': 'vehicle'}
+json_pre_dict = {'1': 'person_visible', '2': 'person_full', '3': 'person_head', '4':'vehicle'}
+
+data_root = 'DATA/split_' + json_pre_dict[CATE_ID].split('_')[0] +'_train/'
+anno_root = 'DATA/coco_format_json/'
+
+classes = (classes_dict[CATE_ID],)
+json_pre = json_pre_dict[CATE_ID]
+
+dataset_type = 'CocoDataset'
+img_norm_cfg = dict(
+    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
+train_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', with_bbox=True),
+    dict(
+        type='Resize',
+        img_scale=[(1333, 480), (1333, 960)],
+        multiscale_mode='range',
+        keep_ratio=True),
+    dict(type='RandomFlip', flip_ratio=0.5),
+    dict(type='Normalize', **img_norm_cfg),
+    dict(type='Pad', size_divisor=32),
+    dict(type='DefaultFormatBundle'),
+    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
+]
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='MultiScaleFlipAug',
+        img_scale=(1333, 800),
+        flip=False,
+        transforms=[
+            dict(type='Resize', keep_ratio=True),
+            dict(type='RandomFlip'),
+            dict(type='Normalize', **img_norm_cfg),
+            dict(type='Pad', size_divisor=32),
+            dict(type='DefaultFormatBundle'),
+            dict(type='Collect', keys=['img']),
+        ])
+]
+data = dict(
+    samples_per_gpu=2,
+    workers_per_gpu=4,
+    train=dict(
+        type=dataset_type,
+        classes=classes,
+        ann_file=anno_root + json_pre + '_train.json',
+        img_prefix=data_root + 'image_train',
+        pipeline=train_pipeline),
+    val=dict(
+        type=dataset_type,
+        classes=classes,
+        ann_file=anno_root + json_pre + '_val.json',
+        img_prefix=data_root + 'image_train',
+        pipeline=test_pipeline),
+    test=dict(
+        type=dataset_type,
+        classes=classes,
+        ann_file=anno_root + json_pre + '_val.json',
+        img_prefix=data_root + 'image_train',
+        pipeline=test_pipeline))
+        
+# default_runtime
+load_from = None
+resume_from = None
+
+# schedule_2x
+# optimizer
+optimizer = dict(type='SGD', lr=0.00375, momentum=0.9, weight_decay=0.0001)
+optimizer_config = dict(grad_clip=None)
+
