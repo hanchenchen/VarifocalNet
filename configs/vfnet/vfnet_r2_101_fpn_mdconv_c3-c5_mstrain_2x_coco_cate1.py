@@ -83,10 +83,10 @@ data = dict(
         
 # default_runtime
 load_from = "./cpt/vfnet_r2_101_dcn_ms_2x_51.1.pth"
-resume_from = None
+resume_from = "./work_dirs/vfnet_r2_101_fpn_mdconv_c3-c5_mstrain_2x_coco_cate1/epoch_16.pth"
 
 # schedule_2x
 # optimizer
-optimizer = dict(type='SGD', lr=0.00375, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=0.0001, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=None)
 

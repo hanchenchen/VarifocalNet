@@ -16,7 +16,7 @@ model = dict(
         stage_with_dcn=(False, True, True, True)))
 
 # DATA
-CATE_ID = '1'
+CATE_ID = '2'
 
 classes_dict = {'1': 'visible body', '2': 'full body', '3': 'head', '4': 'vehicle'}
 json_pre_dict = {'1': 'person_visible', '2': 'person_full', '3': 'person_head', '4':'vehicle'}
@@ -87,6 +87,6 @@ resume_from = None
 
 # schedule_2x
 # optimizer
-optimizer = dict(type='SGD', lr=0.00375, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=0.00125, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=None)
 

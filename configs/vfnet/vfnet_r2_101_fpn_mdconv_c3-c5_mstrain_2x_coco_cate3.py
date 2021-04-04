@@ -16,7 +16,7 @@ model = dict(
         stage_with_dcn=(False, True, True, True)))
 
 # DATA
-CATE_ID = '1'
+CATE_ID = '3'
 
 classes_dict = {'1': 'visible body', '2': 'full body', '3': 'head', '4': 'vehicle'}
 json_pre_dict = {'1': 'person_visible', '2': 'person_full', '3': 'person_head', '4':'vehicle'}
@@ -83,10 +83,10 @@ data = dict(
         
 # default_runtime
 load_from = "./cpt/vfnet_r2_101_dcn_ms_2x_51.1.pth"
-resume_from = None
+resume_from = "./work_dirs/vfnet_r2_101_fpn_mdconv_c3-c5_mstrain_2x_coco_cate3/epoch_13.pth"
 
 # schedule_2x
 # optimizer
-optimizer = dict(type='SGD', lr=0.00375, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=0.0025, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=None)
 
